@@ -4,7 +4,7 @@
 make async function run only one time.
 
 ### usage
-```
+```js
 const once = require('async-run-once');
 
 const getName = () => new Promise((resolve) => {
