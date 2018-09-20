@@ -1,36 +1,33 @@
 
-export default function runOnce(promise) {
-    const ee = new EventEmitter();
-    const eeId = +new Date();
+export default function once(promise) {
+    const queue = []
     let running = false;
     let result = null;
-    return (...props) => new Promise((resolve, reject) => {
+
+    return (...props) => new Promise(async (resolve, reject) => {
         if (result) {
             resolve(result);
             return;
         }
 
         if (running) {
-            ee.once(eeId, ({ data, err }) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve(data);
-            });
+            queue.push({ resolve, reject, props });
             return;
         }
 
-        running = true;
-        promise(...props).then(data => {
-            result = data;
+        try {
+            running = true;
+            result = await promise(...props);
             resolve(data);
-            ee.emit(eeId, { data });
-        }).catch(err => {
+        } catch (e) {
             running = false;
-            reject({ err });
-            ee.emit(eeId, { err });
+            reject(e);
+        }
+
+        queue.forEach(({ resolve, reject }) => {
+            result ? resolve(result) : reject();
         });
+        queue.length = 0;
     });
 };
 
