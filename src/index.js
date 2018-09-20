@@ -1,4 +1,3 @@
-
 export default function once(promise) {
     const queue = []
     let running = false;
@@ -18,7 +17,7 @@ export default function once(promise) {
         try {
             running = true;
             result = await promise(...props);
-            resolve(data);
+            resolve(running);
         } catch (e) {
             running = false;
             reject(e);
@@ -30,4 +29,3 @@ export default function once(promise) {
         queue.length = 0;
     });
 };
-

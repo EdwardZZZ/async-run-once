@@ -3,6 +3,11 @@
 让异步代码只运行一次
 make async function run only one time.
 
+### install
+```bash
+$ npm i -S async-run-once
+```
+
 ### usage
 ```js
 const once = require('async-run-once');
@@ -14,17 +19,17 @@ const getName = () => new Promise((resolve) => {
     }, 1000);
 });
 
-const name = once(getName);
+const newGetName = once(getName);
 
 [...Array(10)].forEach(async () => {
-    const name = await name();
+    const name = await newGetName();
     // const name = await getName();
     console.log(name);
 });
 
 setTimeout(async () => {
     console.log('-----')
-    const name = await name();
+    const name = await newGetName();
     console.log('>>', name);
 }, 3000)
 ```
