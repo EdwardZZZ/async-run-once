@@ -1,5 +1,5 @@
 export default function once(promise) {
-    const queue = []
+    const queue = [];
     let running = false;
     let result = null;
 
@@ -10,7 +10,7 @@ export default function once(promise) {
         }
 
         if (running) {
-            queue.push({ resolve, reject, props });
+            queue.push({ resolve, reject });
             return;
         }
 
@@ -19,10 +19,10 @@ export default function once(promise) {
             result = await promise(...props);
             resolve(running);
         } catch (e) {
-            running = false;
             reject(e);
         }
 
+        running = false;
         queue.forEach(({ resolve, reject }) => {
             result ? resolve(result) : reject();
         });
