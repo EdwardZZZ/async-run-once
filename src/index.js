@@ -1,4 +1,8 @@
-export default function once(promise) {
+export default function once(fn) {
+    if ( !(fn instanceof Promise || typeof fn === 'function') ) {
+        throw new Error('arguments "fn" must be async function');
+    }
+
     const queue = [];
     let running = false;
     let result = null;
@@ -16,7 +20,7 @@ export default function once(promise) {
 
         try {
             running = true;
-            result = await promise(...props);
+            result = await fn(...props);
             resolve(running);
         } catch (e) {
             reject(e);
