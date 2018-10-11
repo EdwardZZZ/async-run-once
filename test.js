@@ -1,33 +1,36 @@
 const once = require('./index');
 var expect = require('chai').expect;
 
-let name = 'a';
-const getName = () => new Promise((resolve) => {
-    name += 'a';
+const getName = (n) => new Promise((resolve) => {
+    console.log('--', n)
+
+    n += 100;
     setTimeout(() => {
-        resolve(name);
+        resolve(n);
     }, 1000);
 });
 
 const newGetName = once(getName);
 
-describe('test1..', function() {
-    [...Array(6)].forEach(() => {
-        it('aa', function(done) {
-            newGetName().then(name => {
-                expect(name).to.be.equal('aa');
-                done();
-            });
-        });
-    });
-});
+const map = new Map();
+const getOnceFn = (fName) => {
+    if (map.has(fName)) {
+        return map.get(fName);
+    }
 
-describe('test2..', function() {
-    it('aa', function(done) {
-        setTimeout(async () => {
-            const name = await newGetName();
-            expect(name).to.be.equal('aa');
-            done();
-        }, 1000)
+    const newGetName = once(getName);
+    map.set(fName, newGetName);
+    return newGetName;
+}
+
+(async () => {
+    [...Array(10)].forEach(async (_, i) => {
+        const n = await getOnceFn(1)(i);
+        console.log(n);
     });
-});
+
+    [...Array(10)].forEach(async (_, i) => {
+        const n = await getOnceFn(2)(i + 10);
+        console.log(n);
+    });
+})()

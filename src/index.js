@@ -1,6 +1,4 @@
-
-
-export default function once(fn) {
+function once(fn) {
     if ( !(fn instanceof Promise || typeof fn === 'function') ) {
         throw new Error('arguments "fn" must be async function');
     }
@@ -39,3 +37,17 @@ export default function once(fn) {
         })
     });
 };
+
+// Map
+const fnMap = {};
+once.onceMap = function(fName, fn) {
+    if (fName in fnMap) {
+        return fnMap[fName];
+    }
+
+    const newFn = once(fn);
+    fnMap[fName] = newFn;
+    return newFn;
+}
+
+export default once;
