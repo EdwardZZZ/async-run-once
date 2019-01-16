@@ -10,7 +10,10 @@ $ npm i -S async-run-once
 
 ### usage
 ```js
-const { once, getOnceFn } = require('async-run-once');
+// once(fn)(...args);
+// once(fn, ...args);
+
+const once = require('async-run-once');
 
 const getName = () => new Promise((resolve) => {
     console.log(111);

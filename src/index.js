@@ -16,7 +16,7 @@ function once(fn) {
     }
 
     return (...props) => new Promise((resolve, reject) => {
-        if (result) {
+        if (result !== null) {
             resolve(result);
             return;
         }
@@ -27,7 +27,7 @@ function once(fn) {
         }
 
         running = true;
-        fn(...props).then((data) => {
+        (Promise.prototype.isPrototypeOf(fn) ? fn : fn(...props)).then((data) => {
             result = data;
             runQueue();
             resolve(result);
