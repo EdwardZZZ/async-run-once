@@ -11,7 +11,7 @@ $ npm i -S async-run-once
 ### usage
 ```js
 // once(fn)(...args);
-// once(fn, ...args);
+// once(fn(...args));
 
 const once = require('async-run-once');
 
