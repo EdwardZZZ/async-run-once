@@ -27,14 +27,14 @@ function once(fn) {
         }
 
         running = true;
-        (Promise.prototype.isPrototypeOf(fn) ? fn : fn(...props)).then((data) => {
+        Promise.resolve(fn(...props)).then((data) => {
             result = data;
             runQueue();
             resolve(result);
         }).catch((e) => {
             runQueue();
             reject(e);
-        })
+        });
     });
 };
 
